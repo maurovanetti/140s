@@ -12,12 +12,13 @@ class User(ndb.Model):
         return cls.query(ancestor=ancestor_key)
 
 
+class Hashtag(ndb.Model):
+    text=ndb.StringProperty()
+
+
 class Track:
     file_url=ndb.StringProperty()
     date=ndb.DateProperty()
-    lenght=ndb.IntengerProperty()
-    author=ndb.ReferenceProperty(User)
-    hashtag=ndb.ReferenceProperty(Hashtag)
-
-class Hashtag:
-    text=ndb.StringProperty()
+    lenght=ndb.IntegerProperty()
+    author=ndb.KeyProperty(User)
+    hashtag=ndb.KeyProperty(Hashtag)
