@@ -89,12 +89,36 @@ class get_next_track(webapp2.RequestHandler):
         t=Track.get_track_by_hashtag(hashtag,1)
         self.response.write(model_to_json(t))
 
+class get_next_track_smart(webapp2.RequestHandler):
+    def post(self):
+        hashtag=self.request.POST["hashtag"]
+        listener=self.request.POST["listener"]
+
+        best=Track.get_track_by_hashtag(hashtag,100)
+        listened=Listened.get_listened_by_listener(listener)
+        for track in best:
+            found = True
+            for bad_track in listened:
+                if track.file_url == listened.screen_name:
+                    found = False
+                else
+                    found = True
+                    break
+            if found:
+                l=Listened(file_url=track.file_url,screen_name=listener)
+                l.put()
+                self.response.write(model_to_json(track))
+                return
+            
+        output={"success":False, "message":"Queue exhausted"}
+        self.response.write(model_to_json(output))
+
 
 application = webapp2.WSGIApplication([
     ('/newtrack', new_track),
     ('/newuser', new_user),
     ('/gettracklist', get_track_list),
-    ('/nexttrack',get_next_track),
+    ('/nexttrack',get_next_track_smart),
     ('/hashtags', get_hashtag_list),
 
 ], debug=True)

@@ -38,9 +38,18 @@ class Track(ndb.Model):
             return tracks
         else:
             return random.sample(tracks,amount)
+
     @classmethod
     def get_all_hashtag(cls):
-
        all_reg=cls.query().fetch(100)
        hashtags=set([r.hashtag for r in all_reg])
        return hashtags
+
+
+class Listened(ndb.Model):
+    file_url=ndb.StringProperty()
+    screen_name = ndb.StringProperty()
+
+    @classmethod
+    def get_listened_by_listener(cls,screen_name):
+         return cls.query(Listened.screen_name==screen_name).fetch(100)
