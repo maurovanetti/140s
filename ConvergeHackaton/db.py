@@ -1,6 +1,6 @@
 import cgi
 import urllib
-
+import random
 import webapp2
 
 from google.appengine.ext import ndb
@@ -26,14 +26,18 @@ class Track(ndb.Model):
     author=ndb.StringProperty()
     score=ndb.IntegerProperty(default=1)
     hashtag=ndb.StringProperty()
-    
+
     @classmethod
     def get_track_by_author(cls,author):
          return cls.query(Track.author==author).fetch(1)
 
     @classmethod
     def get_track_by_hashtag(cls,hashtag,amount):
-         return cls.query(Track.hashtag==hashtag).order(-Track.date).fetch(amount)
+        tracks=cls.query(Track.hashtag==hashtag).order(-Track.date).fetch()
+        if len(tracks)<amount:
+            return tracks
+        else:
+            return random.sample(tracks,amount)
     @classmethod
     def get_all_hashtag(cls):
 

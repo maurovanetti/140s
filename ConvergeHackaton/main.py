@@ -80,12 +80,14 @@ class get_hashtag_list(webapp2.RequestHandler):
         else:
             res=random.sample(h_list,size)
         output={"result":list(res)}
-        print output
         self.response.write(model_to_json(output,entity=False))
 
-class get_next_track():
+class get_next_track(webapp2.RequestHandler):
     def post(self):
-        t=Track
+        hashtag=self.request.POST["hashtag"]
+
+        t=Track.get_track_by_hashtag(hashtag,1)
+        self.response.write(model_to_json(t))
 
 
 application = webapp2.WSGIApplication([
